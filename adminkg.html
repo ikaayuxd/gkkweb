@@ -72,7 +72,10 @@
         productItem.className = 'flex justify-between items-center bg-white p-2 rounded-lg shadow-md mb-2';
         productItem.innerHTML = `
           <span>${name} - ₹${price}</span>
-          <button class="delete-button text-red-500">Delete</button>
+          <div>
+            <button class="edit-button text-blue-500 mr-2">Edit</button>
+            <button class="delete-button text-red-500">Delete</button>
+          </div>
         `;
         productList.appendChild(productItem);
 
@@ -81,6 +84,22 @@
           const products = JSON.parse(localStorage.getItem('products')) || [];
           const updatedProducts = products.filter(product => product.name !== name || product.price !== price);
           localStorage.setItem('products', JSON.stringify(updatedProducts));
+        });
+
+        productItem.querySelector('.edit-button').addEventListener('click', function () {
+          const newName = prompt('Enter new product name:', name);
+          const newPrice = prompt('Enter new product price:', price);
+          if (newName && newPrice) {
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            const updatedProducts = products.map(product => {
+              if (product.name === name && product.price === price) {
+                return { name: newName, price: newPrice };
+              }
+              return product;
+            });
+            localStorage.setItem('products', JSON.stringify(updatedProducts));
+            productItem.querySelector('span').textContent = `${newName} - ₹${newPrice}`;
+          }
         });
       }
     });
@@ -139,10 +158,4 @@
       </form>
       <h2 class="text-xl font-bold text-gray-800 mt-6 mb-4">
         Product List
-      </h2>
-      <div id="product-list">
-      </div>
-    </div>
-  </div>
-</body>
-</html>
+      </h
