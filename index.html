@@ -1,0 +1,211 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Gumasta Krishi Kendra
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js">
+  </script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6, #10b981, #f59e0b);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .white-border {
+      border: 2px solid white;
+      border-radius: 12px;
+    }
+
+    .pattern-bg {
+      background: repeating-linear-gradient(
+        45deg,
+        #f3f4f6,
+        #f3f4f6 10px,
+        #e5e7eb 10px,
+        #e5e7eb 20px
+      );
+    }
+  </style>
+  <script>
+   document.addEventListener('DOMContentLoaded', function () {
+     const buttons = document.querySelectorAll('.product-button');
+     const cartDetailsElement = document.getElementById('cart-details');
+     const cartValueElement = document.getElementById('cart-value');
+     const placeOrderButton = document.getElementById('place-order-button');
+     const clearCartButton = document.getElementById('clear-cart-button');
+     let cart = {};
+
+     buttons.forEach(button => {
+       button.addEventListener('click', function () {
+         if (this.id !== 'place-order-button' && this.id !== 'clear-cart-button') {
+           const productName = this.dataset.name;
+           const productPrice = parseInt(this.dataset.price);
+           const quantity = prompt('Enter quantity:');
+           if (quantity && !isNaN(quantity)) {
+             cart[productName] = {
+               price: productPrice,
+               quantity: parseInt(quantity),
+               total: productPrice * parseInt(quantity)
+             };
+             updateCart();
+           }
+         }
+       });
+     });
+
+     function updateCart() {
+       let cartDetailsHTML = '';
+       let totalValue = 0;
+       for (const [productName, productDetails] of Object.entries(cart)) {
+         cartDetailsHTML += `<div class="text-black">${productName} - ${productDetails.quantity} × ₹${productDetails.price} = ₹${productDetails.total}</div>`;
+         totalValue += productDetails.total;
+       }
+       cartDetailsElement.innerHTML = cartDetailsHTML;
+       cartValueElement.textContent = `Total Cart Value: ₹${totalValue}`;
+     }
+
+     placeOrderButton.addEventListener('click', function () {
+       const buyerName = prompt('Enter your name:');
+       if (!buyerName) return;
+
+       const cartBlockClone = document.createElement('div');
+       cartBlockClone.className = 'pattern-bg';
+       cartBlockClone.style.color = '#000000';
+       cartBlockClone.style.padding = '20px';
+       cartBlockClone.style.width = '300px';
+       cartBlockClone.style.border = '1px solid #000';
+
+       const titleElement = document.createElement('div');
+       titleElement.textContent = 'Gumasta Krishi Kendra';
+       titleElement.className = 'text-black text-center font-bold mb-4';
+
+       const buyerNameElement = document.createElement('div');
+       buyerNameElement.textContent = `Buyer: ${buyerName}`;
+       buyerNameElement.className = 'text-black mb-2';
+
+       const cartDetailsClone = cartDetailsElement.cloneNode(true);
+       cartDetailsClone.className = 'text-black';
+
+       const totalAmountElement = document.createElement('div');
+       totalAmountElement.innerHTML = `<strong>${cartValueElement.textContent}</strong>`;
+       totalAmountElement.className = 'text-black mt-2';
+
+       const dateTimeElement = document.createElement('div');
+       const now = new Date();
+       const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+       dateTimeElement.textContent = now.toLocaleDateString('en-IN', options);
+       dateTimeElement.className = 'text-black mt-4';
+
+       cartBlockClone.appendChild(titleElement);
+       cartBlockClone.appendChild(buyerNameElement);
+       cartBlockClone.appendChild(document.createElement('br')); // Add space between buyer name and products
+       cartBlockClone.appendChild(cartDetailsClone);
+       cartBlockClone.appendChild(totalAmountElement);
+       cartBlockClone.appendChild(dateTimeElement);
+
+       document.body.appendChild(cartBlockClone);
+       html2canvas(cartBlockClone).then(canvas => {
+         const imgData = canvas.toDataURL('image/png');
+         const link = document.createElement('a');
+         link.href = imgData;
+         link.download = 'cart-details.png';
+         link.click();
+         document.body.removeChild(cartBlockClone);
+       });
+     });
+
+     clearCartButton.addEventListener('click', function () {
+       cart = {};
+       updateCart();
+     });
+   });
+  </script>
+ </head>
+ <body class="p-4">
+  <div class="max-w-md mx-auto bg-transparent rounded-lg shadow-md overflow-hidden border border-gray-300 mb-4">
+   <div class="p-4 text-center">
+    <h1 class="text-2xl font-bold text-white white-border p-2 inline-block">
+     GUMASTA KRISHI KENDRA
+    </h1>
+   </div>
+   <div class="p-4">
+    <img alt="Gumasta Krishi Kendra logo with agricultural theme" class="w-1/2 mx-auto rounded-lg" src="https://i.ibb.co/Tqdx4TLY/IMG-20250319-222207-889.jpg"/>
+   </div>
+   <div class="p-4">
+    <p class="text-lg font-semibold text-center text-white">
+     Select a product to order:
+    </p>
+    <div class="grid grid-cols-2 gap-2 mt-4">
+     <button class="product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-between border border-white bg-transparent" data-name="UREA" data-price="330">
+      🌱 UREA - ₹330
+     </button>
+     <button class="product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-between border border-white bg-transparent" data-name="DAP" data-price="1750">
+      🌱 DAP - ₹1750
+     </button>
+     <button class="product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-between border border-white bg-transparent" data-name="P 1010" data-price="850">
+      🌾 P 1010 - ₹850
+     </button>
+     <button class="product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-between border border-white bg-transparent" data-name="NSL 1010" data-price="1050">
+      🌾 NSL 1010 - ₹1050
+     </button>
+     <button class="product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-between border border-white bg-transparent" data-name="IR 64" data-price="1050">
+      🌾 IR 64 - ₹1050
+     </button>
+     <button class="product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-between border border-white bg-transparent" data-name="SB 459" data-price="1750">
+      🌽 SB 459 - ₹1750
+     </button>
+     <button class="product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-between border border-white bg-transparent" data-name="VISHWAS" data-price="1400">
+      🌽 VISHWAS - ₹1400
+     </button>
+     <button class="product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-between border border-white bg-transparent" data-name="SB 189" data-price="1000">
+      🌽 SB 189 - ₹1000
+     </button>
+     <button class="product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-between border border-white bg-transparent" data-name="S 6668" data-price="1650">
+      🌽 S 6668 - ₹1650
+     </button>
+     <button class="product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-between border border-white bg-transparent" data-name="S 7328" data-price="1250">
+      🌽 S 7328 - ₹1250
+     </button>
+     <button class="product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-between border border-white bg-transparent" data-name="ARJUN" data-price="1000">
+      🌽 ARJUN - ₹1000
+     </button>
+     <button class="product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-between border border-white bg-transparent" data-name="ASHAVARI" data-price="800">
+      🌽 ASHAVARI - ₹800
+     </button>
+    </div>
+   </div>
+  </div>
+  <div class="max-w-md mx-auto bg-transparent rounded-lg shadow-md overflow-hidden border border-gray-300" id="cart-block">
+   <div class="p-4">
+    <p class="text-lg font-semibold text-center text-white">
+     Cart Details:
+    </p>
+    <div class="mt-4 text-center text-white font-semibold" id="cart-details">
+    </div>
+    <div class="mt-4 text-center text-white font-semibold" id="cart-value">
+     Total Cart Value: ₹0
+    </div>
+    <div class="mt-4 flex justify-between">
+     <button class="product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-between border border-white bg-transparent" id="clear-cart-button">
+      Clear Cart
+     </button>
+     <button class="product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-between border border-white bg-transparent" id="place-order-button">
+      Place Your Order
+     </button>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
