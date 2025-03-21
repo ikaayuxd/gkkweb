@@ -1,0 +1,89 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gumasta Krishi Kendra</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <style>
+    body {
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6, #10b981, #f59e0b);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .white-border {
+      border: 2px solid white;
+      border-radius: 12px;
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const productContainer = document.getElementById('product-container');
+      loadProducts();
+
+      function loadProducts() {
+        const products = JSON.parse(localStorage.getItem('products')) || [];
+        products.forEach(product => {
+          addProductButton(product.name, product.price);
+        });
+      }
+
+      function addProductButton(name, price) {
+        const productButton = document.createElement('button');
+        productButton.className = 'product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-between border border-white bg-transparent';
+        productButton.dataset.name = name;
+        productButton.dataset.price = price;
+        productButton.innerHTML = `${name} - ₹${price}`;
+        productContainer.appendChild(productButton);
+      }
+    });
+  </script>
+</head>
+<body class="p-4">
+  <div class="max-w-md mx-auto bg-transparent rounded-lg shadow-md overflow-hidden border border-gray-300 mb-4">
+    <div class="p-4 text-center">
+      <h1 class="text-2xl font-bold text-white white-border p-2 inline-block">
+        GUMASTA KRISHI KENDRA
+      </h1>
+    </div>
+    <div class="p-4">
+      <img alt="Gumasta Krishi Kendra logo with agricultural theme" class="w-1/2 mx-auto rounded-lg" src="https://i.ibb.co/Tqdx4TLY/IMG-20250319-222207-889.jpg"/>
+    </div>
+    <div class="p-4">
+      <p class="text-lg font-semibold text-center text-white">
+        Select a product to order:
+      </p>
+      <div id="product-container" class="grid grid-cols-2 gap-2 mt-4">
+        <!-- Product buttons will be added here -->
+      </div>
+    </div>
+  </div>
+  <div class="max-w-md mx-auto bg-transparent rounded-lg shadow-md overflow-hidden border border-gray-300" id="cart-block">
+    <div class="p-4">
+      <p class="text-lg font-semibold text-center text-white">
+        Cart Details:
+      </p>
+      <div class="mt-4 text-center text-white font-semibold" id="cart-details">
+      </div>
+      <div class="mt-4 text-center text-white font-semibold" id="cart-value">
+        Total Cart Value: ₹0
+      </div>
+      <div class="mt-4 flex justify-between">
+        <button class="product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-between border border-white bg-transparent" id="clear-cart-button">
+          Clear Cart
+        </button>
+        <button class="product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-between border border-white bg-transparent" id="place-order-button">
+          Place Your Order
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
