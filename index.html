@@ -65,9 +65,11 @@
             }, {});
 
             productContainer.innerHTML = '';
-            categories[category].forEach(product => {
-              addProductButton(product.name, product.price);
-            });
+            if (categories[category]) {
+              categories[category].forEach(product => {
+                addProductButton(product.name, product.price);
+              });
+            }
           });
       }
 
