@@ -35,19 +35,6 @@
     }
   </style>
   <script>
-    const API_URL = 'https://gumastagkk-default-rtdb.firebaseio.com/';
-    const API_KEY = 'AIzaSyBoS3xsfH5d5_S2ja9U34F2uRfTnYY-LBI';
-
-    async function fetchProducts() {
-      const response = await fetch(API_URL, {
-        headers: {
-          'X-Master-Key': API_KEY
-        }
-      });
-      const data = await response.json();
-      return data.record.products;
-    }
-
     document.addEventListener('DOMContentLoaded', function () {
       const productContainer = document.getElementById('product-container');
       const cartDetailsElement = document.getElementById('cart-details');
@@ -58,11 +45,18 @@
 
       loadProducts();
 
-      async function loadProducts() {
-        const products = await fetchProducts();
-        products.forEach(product => {
-          addProductButton(product.name, product.price);
-        });
+      function loadProducts() {
+        fetch('config.txt')
+          .then(response => response.text())
+          .then(data => {
+            const products = data.split('\n').map(line => {
+              const [name, price] = line.split(',');
+              return { name, price: parseFloat(price) };
+            });
+            products.forEach(product => {
+              addProductButton(product.name, product.price);
+            });
+          });
       }
 
       function addProductButton(name, price) {
