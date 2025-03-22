@@ -76,12 +76,15 @@
         productButton.innerHTML = `${name} - ₹${price}`;
         productButton.addEventListener('click', function () {
           const quantity = prompt('Enter quantity:');
-          if (quantity && !isNaN(quantity)) {
+          if (quantity && !isNaN(quantity) && parseInt(quantity) > 0) {
             cart[name] = {
               price: price,
               quantity: parseInt(quantity),
               total: price * parseInt(quantity)
             };
+            updateCart();
+          } else if (parseInt(quantity) === 0) {
+            delete cart[name];
             updateCart();
           }
         });
