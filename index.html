@@ -35,6 +35,19 @@
     }
   </style>
   <script>
+    const API_URL = 'https://api.jsonbin.io/v3/b/YOUR_BIN_ID';
+    const API_KEY = 'YOUR_API_KEY';
+
+    async function fetchProducts() {
+      const response = await fetch(API_URL, {
+        headers: {
+          'X-Master-Key': API_KEY
+        }
+      });
+      const data = await response.json();
+      return data.record.products;
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
       const productContainer = document.getElementById('product-container');
       const cartDetailsElement = document.getElementById('cart-details');
@@ -45,8 +58,8 @@
 
       loadProducts();
 
-      function loadProducts() {
-        const products = JSON.parse(localStorage.getItem('products')) || [];
+      async function loadProducts() {
+        const products = await fetchProducts();
         products.forEach(product => {
           addProductButton(product.name, product.price);
         });
