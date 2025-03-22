@@ -62,10 +62,17 @@
       });
 
       function loadProducts() {
-        const products = JSON.parse(localStorage.getItem('products')) || [];
-        products.forEach(product => {
-          addProductToList(product.name, product.price);
-        });
+        fetch('config.txt')
+          .then(response => response.text())
+          .then(data => {
+            const products = data.split('\n').map(line => {
+              const [name, price] = line.split(',');
+              return { name, price: parseFloat(price) };
+            });
+            products.forEach(product => {
+              addProductToList(product.name, product.price);
+            });
+          });
       }
 
       function addProductToList(name, price) {
