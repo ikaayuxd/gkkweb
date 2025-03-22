@@ -41,21 +41,31 @@
       const cartValueElement = document.getElementById('cart-value');
       const placeOrderButton = document.getElementById('place-order-button');
       const clearCartButton = document.getElementById('clear-cart-button');
+      const menuButtons = document.querySelectorAll('.menu-button');
       let cart = {};
 
-      loadProducts();
+      menuButtons.forEach(button => {
+        button.addEventListener('click', function () {
+          const category = this.dataset.category;
+          loadProducts(category);
+        });
+      });
 
-      function loadProducts() {
+      function loadProducts(category) {
         fetch('config.txt')
           .then(response => response.text())
           .then(data => {
-            const products = data.split('\n').map(line => {
-              const [name, price] = line.split(',');
-              if (name && price) {
+            const categories = data.split('\n\n').reduce((acc, section) => {
+              const [categoryName, products] = section.split(' = ');
+              acc[categoryName.trim()] = products.replace(/[\[\]]/g, '').split('\n').map(line => {
+                const [name, price] = line.split(',').map(item => item.trim());
                 return { name, price: parseFloat(price) };
-              }
-            }).filter(product => product);
-            products.forEach(product => {
+              });
+              return acc;
+            }, {});
+
+            productContainer.innerHTML = '';
+            categories[category].forEach(product => {
               addProductButton(product.name, product.price);
             });
           });
@@ -145,6 +155,9 @@
         cart = {};
         updateCart();
       });
+
+      // Load default category (Seeds) on page load
+      loadProducts('Seeds');
     });
   </script>
 </head>
@@ -156,9 +169,12 @@
       </h1>
     </div>
     <div class="p-4">
-      <img alt="Gumasta Krishi Kendra logo with agricultural theme" class="w-1/2 mx-auto rounded-lg" src="https://i.ibb.co/Tqdx4TLY/IMG-20250319-222207-889.jpg"/>
-    </div>
-    <div class="p-4">
+      <div class="grid grid-cols-2 gap-2 mb-4">
+        <button class="menu-button text-white font-semibold py-2 px-4 rounded-lg border border-white bg-transparent" data-category="Seeds">Seeds</button>
+        <button class="menu-button text-white font-semibold py-2 px-4 rounded-lg border border-white bg-transparent" data-category="Fertilizers">Fertilizers</button>
+        <button class="menu-button text-white font-semibold py-2 px-4 rounded-lg border border-white bg-transparent" data-category="Herbicides">Herbicides</button>
+        <button class="menu-button text-white font-semibold py-2 px-4 rounded-lg border border-white bg-transparent" data-category="Pesticides">Pesticides</button>
+      </div>
       <p class="text-lg font-semibold text-center text-white">
         Select a product to order:
       </p>
