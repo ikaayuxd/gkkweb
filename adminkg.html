@@ -24,13 +24,37 @@
     }
   </style>
   <script>
+    const API_URL = 'https://api.jsonbin.io/v3/b/YOUR_BIN_ID';
+    const API_KEY = 'YOUR_API_KEY';
+
+    async function fetchProducts() {
+      const response = await fetch(API_URL, {
+        headers: {
+          'X-Master-Key': API_KEY
+        }
+      });
+      const data = await response.json();
+      return data.record.products;
+    }
+
+    async function updateProducts(products) {
+      await fetch(API_URL, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Master-Key': API_KEY
+        },
+        body: JSON.stringify({ products })
+      });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
       const loginForm = document.getElementById('login-form');
       const adminSection = document.getElementById('admin-section');
       const productForm = document.getElementById('product-form');
       const productList = document.getElementById('product-list');
 
-      loginForm.addEventListener('submit', function (e) {
+      loginForm.addEventListener('submit', async function (e) {
         e.preventDefault();
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
@@ -38,21 +62,22 @@
         if (username === 'gkk' && password === 'kartik12gkk') {
           loginForm.style.display = 'none';
           adminSection.style.display = 'block';
-          loadProducts();
+          const products = await fetchProducts();
+          products.forEach(product => addProductToList(product.name, product.price));
         } else {
           alert('Invalid username or password');
         }
       });
 
-      productForm.addEventListener('submit', function (e) {
+      productForm.addEventListener('submit', async function (e) {
         e.preventDefault();
         const productName = document.getElementById('product-name').value;
         const productPrice = document.getElementById('product-price').value;
 
         if (productName && productPrice) {
-          const products = JSON.parse(localStorage.getItem('products')) || [];
+          const products = await fetchProducts();
           products.push({ name: productName, price: productPrice });
-          localStorage.setItem('products', JSON.stringify(products));
+          await updateProducts(products);
           addProductToList(productName, productPrice);
           productForm.reset();
         } else {
@@ -60,27 +85,39 @@
         }
       });
 
-      function loadProducts() {
-        const products = JSON.parse(localStorage.getItem('products')) || [];
-        products.forEach(product => {
-          addProductToList(product.name, product.price);
-        });
-      }
-
       function addProductToList(name, price) {
         const productItem = document.createElement('div');
         productItem.className = 'flex justify-between items-center bg-white p-2 rounded-lg shadow-md mb-2';
         productItem.innerHTML = `
           <span>${name} - ₹${price}</span>
-          <button class="delete-button text-red-500">Delete</button>
+          <div>
+            <button class="edit-button text-blue-500 mr-2">Edit</button>
+            <button class="delete-button text-red-500">Delete</button>
+          </div>
         `;
         productList.appendChild(productItem);
 
-        productItem.querySelector('.delete-button').addEventListener('click', function () {
+        productItem.querySelector('.delete-button').addEventListener('click', async function () {
           productList.removeChild(productItem);
-          const products = JSON.parse(localStorage.getItem('products')) || [];
-          const updatedProducts = products.filter(product => product.name !== name || product.price !== price);
-          localStorage.setItem('products', JSON.stringify(updatedProducts));
+          let products = await fetchProducts();
+          products = products.filter(product => product.name !== name || product.price !== price);
+          await updateProducts(products);
+        });
+
+        productItem.querySelector('.edit-button').addEventListener('click', async function () {
+          const newName = prompt('Enter new product name:', name);
+          const newPrice = prompt('Enter new product price:', price);
+          if (newName && newPrice) {
+            let products = await fetchProducts();
+            products = products.map(product => {
+              if (product.name === name && product.price === price) {
+                return { name: newName, price: newPrice };
+              }
+              return product;
+            });
+            await updateProducts(products);
+            productItem.querySelector('span').textContent = `${newName} - ₹${newPrice}`;
+          }
         });
       }
     });
