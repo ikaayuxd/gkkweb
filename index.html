@@ -52,24 +52,17 @@
       });
 
       function loadProducts(category) {
-        fetch('config.txt')
+        fetch(`${category}.txt`)
           .then(response => response.text())
           .then(data => {
-            const categories = data.split('\n\n').reduce((acc, section) => {
-              const [categoryName, products] = section.split(' = ');
-              acc[categoryName.trim()] = products.replace(/[\[\]]/g, '').split('\n').map(line => {
-                const [name, price] = line.split(',').map(item => item.trim());
-                return { name, price: parseFloat(price) };
-              });
-              return acc;
-            }, {});
-
+            const products = data.split('\n').map(line => {
+              const [name, price] = line.split(',').map(item => item.trim());
+              return { name, price: parseFloat(price) };
+            });
             productContainer.innerHTML = '';
-            if (categories[category]) {
-              categories[category].forEach(product => {
-                addProductButton(product.name, product.price);
-              });
-            }
+            products.forEach(product => {
+              addProductButton(product.name, product.price);
+            });
           });
       }
 
