@@ -6,7 +6,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
   <style>
     body {
       background: linear-gradient(135deg, #1e3a8a, #3b82f6, #10b981, #f59e0b);
@@ -42,7 +41,6 @@
       const cartValueElement = document.getElementById('cart-value');
       const placeOrderButton = document.getElementById('place-order-button');
       const clearCartButton = document.getElementById('clear-cart-button');
-      const orderHistoryButton = document.getElementById('order-history-button');
       const menuButtons = document.querySelectorAll('.menu-button');
       let cart = {};
 
@@ -108,21 +106,6 @@
         const buyerName = prompt('Enter your name:');
         if (!buyerName) return;
 
-        const orderDetails = {
-          buyerName,
-          cart,
-          totalValue: cartValueElement.textContent.split('₹')[1],
-          date: new Date().toISOString()
-        };
-
-        axios.post('/saveOrder', orderDetails)
-          .then(response => {
-            console.log('Order saved:', response.data);
-          })
-          .catch(error => {
-            console.error('Error saving order:', error);
-          });
-
         const cartBlockClone = document.createElement('div');
         cartBlockClone.className = 'pattern-bg';
         cartBlockClone.style.color = '#000000';
@@ -173,10 +156,6 @@
         updateCart();
       });
 
-      orderHistoryButton.addEventListener('click', function () {
-        window.location.href = 'orders.html';
-      });
-
       // Load default category (Seeds) on page load
       loadProducts('Seeds');
     });
@@ -222,12 +201,8 @@
           Place Your Order
         </button>
       </div>
-      <div class="mt-4 text-center">
-        <button class="product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-between border border-white bg-transparent" id="order-history-button">
-          Order History
-        </button>
-      </div>
     </div>
   </div>
 </body>
 </html>
+
