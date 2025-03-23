@@ -1,66 +1,86 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 
-// Middleware
-app.use(bodyParser.json());
 app.use(cors());
+app.use(bodyParser.json());
 
-// MongoDB connection
-const mongoURI = 'mongodb+srv://xaayux:909090xd@cluster0.mojpz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log(err));
+const ordersFilePath = path.join(__dirname, 'orders.json');
 
-// Order schema and model
-const orderSchema = new mongoose.Schema({
-  buyerName: String,
-  cart: Object,
-  totalValue: String,
-  date: Date
+// Load existing orders from file
+let orders = [];
+if (fs.existsSync(ordersFilePath)) {
+  const data = fs.readFileSync(ordersFilePath);
+  orders = JSON.parse(data);
+}
+
+// Save orders to file
+function saveOrders() {
+  fs.writeFileSync(ordersFilePath, JSON.stringify(orders, null, 2));
+}
+
+// Place an order
+app.post('/place-order', (req, res) => {
+  const order = req.body;
+  order.date = new Date().toISOString();
+  orders.push(order);
+  saveOrders();
+  res.json({ message: 'Order placed successfully', order });
 });
 
-const Order = mongoose.model('Order', orderSchema);
-
-// Routes
-app.post('/saveOrder', (req, res) => {
-  const newOrder = new Order(req.body);
-  newOrder.save()
-    .then(order => res.json(order))
-    .catch(err => res.status(400).json('Error: ' + err));
+// Get order history
+app.get('/order-history', (req, res) => {
+  res.json(orders);
 });
 
-app.get('/getOrders', (req, res) => {
-  Order.find()
-    .then(orders => res.json(orders))
-    .catch(err => res.status(400).json('Error: ' + err));
+// Get total sales and profits
+app.get('/total-sales', (req, res) => {
+  let totalSales = 0;
+  let totalQuantity = 0;
+  orders.forEach(order => {
+    for (const [productName, productDetails] of Object.entries(order)) {
+      totalSales += productDetails.total;
+      totalQuantity += productDetails.quantity;
+    }
+  });
+  res.json({ totalSales, totalQuantity });
 });
 
-app.get('/getOrdersByDate', (req, res) => {
-  const date = new Date(req.query.date);
-  const nextDate = new Date(date);
-  nextDate.setDate(date.getDate() + 1);
-
-  Order.find({ date: { $gte: date, $lt: nextDate } })
-    .then(orders => res.json(orders))
-    .catch(err => res.status(400).json('Error: ' + err));
+// Get profits by date
+app.get('/profits-by-date', (req, res) => {
+  const { date } = req.query;
+  let totalSales = 0;
+  orders.forEach(order => {
+    if (order.date.startsWith(date)) {
+      for (const [productName, productDetails] of Object.entries(order)) {
+        totalSales += productDetails.total;
+      }
+    }
+  });
+  res.json({ date, totalSales });
 });
 
-app.get('/getOrdersByMonth', (req, res) => {
-  const [year, month] = req.query.month.split('-');
-  const startDate = new Date(year, month - 1, 1);
-  const endDate = new Date(year, month, 1);
-
-  Order.find({ date: { $gte: startDate, $lt: endDate } })
-    .then(orders => res.json(orders))
-    .catch(err => res.status(400).json('Error: ' + err));
+// Get profits by month
+app.get('/profits-by-month', (req, res) => {
+  const { month } = req.query;
+  let totalSales = 0;
+  orders.forEach(order => {
+    if (order.date.startsWith(month)) {
+      for (const [productName, productDetails] of Object.entries(order)) {
+        totalSales += productDetails.total;
+      }
+    }
+  });
+  res.json({ month, totalSales });
 });
 
-// Start server
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
+
+module.exports = app;
