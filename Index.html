@@ -11,8 +11,6 @@
   <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
   <!-- Confetti Library -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <!-- Barcode Scanner Library -->
-  <script src="https://unpkg.com/@zxing/library@latest"></script>
   <style>
     body {
       background: linear-gradient(135deg, #1e3a8a, #3b82f6, #10b981, #f59e0b);
@@ -82,48 +80,6 @@
       50% { transform: scale(1.2); }
       100% { transform: scale(1); }
     }
-
-    /* Collapsible Categories */
-    .category-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease-out;
-    }
-
-    .category-content.expanded {
-      max-height: 1000px;
-    }
-
-    .category-header {
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .category-header:hover {
-      background-color: rgba(255, 255, 255, 0.1);
-    }
-
-    /* Scanner Styles */
-    #scanner-container {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      z-index: 1000;
-    }
-
-    #scanner-view {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 300px;
-      height: 300px;
-      border: 2px solid white;
-    }
   </style>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -139,22 +95,12 @@
       // Page Transition
       document.body.classList.add('page-transition');
 
-      // Category Collapse
       menuButtons.forEach(button => {
         button.addEventListener('click', function () {
           const category = this.dataset.category;
-          const content = this.nextElementSibling;
-          
           // Show loading
           loadingIndicator.style.display = 'block';
           productContainer.style.opacity = '0.5';
-
-          // Toggle category
-          document.querySelectorAll('.category-content').forEach(el => {
-            if (el !== content) el.classList.remove('expanded');
-          });
-          content?.classList.toggle('expanded');
-
           loadProducts(category);
         });
       });
@@ -175,11 +121,10 @@
               products.forEach(product => {
                 addProductButton(product.name, product.price);
               });
-              
               // Hide loading
               loadingIndicator.style.display = 'none';
               productContainer.style.opacity = '1';
-            }, 500); // Simulate loading for demo
+            }, 500);
           });
       }
 
@@ -341,50 +286,6 @@
       clearCartButton.addEventListener('click', function () {
         cart = {};
         updateCart();
-      });
-
-      // Barcode Scanner Setup
-      const scannerContainer = document.createElement('div');
-      scannerContainer.id = 'scanner-container';
-      const scannerView = document.createElement('video');
-      scannerView.id = 'scanner-view';
-      scannerContainer.appendChild(scannerView);
-      document.body.appendChild(scannerContainer);
-
-      let selectedDeviceId;
-      const codeReader = new ZXing.BrowserMultiFormatReader();
-
-      // Add scan button
-      const scanButton = document.createElement('button');
-      scanButton.className = 'text-white font-semibold py-2 px-4 rounded-lg border border-white bg-transparent mb-4';
-      scanButton.textContent = '📷 Scan Barcode';
-      scanButton.addEventListener('click', startScanner);
-      document.querySelector('.p-4').insertBefore(scanButton, productContainer);
-
-      function startScanner() {
-        scannerContainer.style.display = 'block';
-        codeReader.decodeFromVideoDevice(selectedDeviceId, 'scanner-view', (result, err) => {
-          if (result) {
-            alert(`Scanned: ${result.text}`);
-            stopScanner();
-          }
-          if (err && !(err instanceof ZXing.NotFoundException)) {
-            console.error(err);
-            stopScanner();
-          }
-        });
-      }
-
-      function stopScanner() {
-        codeReader.reset();
-        scannerContainer.style.display = 'none';
-      }
-
-      // Click outside scanner to close
-      scannerContainer.addEventListener('click', function(e) {
-        if (e.target === scannerContainer) {
-          stopScanner();
-        }
       });
 
       // Load default category
