@@ -46,8 +46,7 @@
 
 ## 📁 Project Structure
 
-\```
-gkkweb/
+\``` gkkweb/
 ├── 📄 index.html          # Main application file
 ├── 📄 adminkg.html        # Admin interface
 ├── 📄 indexx.html         # Alternative interface
@@ -57,8 +56,7 @@ gkkweb/
 ├── 📊 Pesticides.txt      # Pesticides product data
 ├── ⚙️ config.txt          # Configuration file
 ├── 📋 requirements.txt    # Dependencies list
-└── 📖 README.md           # Project documentation
-\```
+└── 📖 README.md           # Project documentation \```
 
 ---
 
