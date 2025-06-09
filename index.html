@@ -69,6 +69,9 @@
       }
 
       function addProductButton(name, price) {
+        const productWrapper = document.createElement('div');
+        productWrapper.className = 'flex flex-col gap-1';
+        
         const productButton = document.createElement('button');
         productButton.className = 'product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-between border border-white bg-transparent';
         productButton.dataset.name = name;
@@ -77,10 +80,11 @@
         productButton.addEventListener('click', function () {
           const quantity = prompt('Enter quantity:');
           if (quantity && !isNaN(quantity) && parseInt(quantity) > 0) {
+            const currentPrice = parseFloat(productButton.dataset.price);
             cart[name] = {
-              price: price,
+              price: currentPrice,
               quantity: parseInt(quantity),
-              total: price * parseInt(quantity)
+              total: currentPrice * parseInt(quantity)
             };
             updateCart();
           } else if (parseInt(quantity) === 0) {
@@ -88,7 +92,30 @@
             updateCart();
           }
         });
-        productContainer.appendChild(productButton);
+        
+        const editButton = document.createElement('button');
+        editButton.className = 'edit-price-btn text-white font-semibold py-1 px-2 rounded-lg border border-yellow-400 bg-yellow-600 hover:bg-yellow-700 text-xs';
+        editButton.innerHTML = 'Edit Price';
+        editButton.addEventListener('click', function (e) {
+          e.stopPropagation();
+          const newPrice = prompt(`Enter new price for ${name}:`, price);
+          if (newPrice && !isNaN(newPrice) && parseFloat(newPrice) > 0) {
+            const updatedPrice = parseFloat(newPrice);
+            productButton.dataset.price = updatedPrice;
+            productButton.innerHTML = `${name} - ₹${updatedPrice}`;
+            
+            // Update cart if this item is already in cart
+            if (cart[name]) {
+              cart[name].price = updatedPrice;
+              cart[name].total = cart[name].quantity * updatedPrice;
+              updateCart();
+            }
+          }
+        });
+        
+        productWrapper.appendChild(productButton);
+        productWrapper.appendChild(editButton);
+        productContainer.appendChild(productWrapper);
       }
 
       function updateCart() {
@@ -205,4 +232,3 @@
   </div>
 </body>
 </html>
-
