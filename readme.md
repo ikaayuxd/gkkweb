@@ -1,5 +1,6 @@
 # 🌾 Gumasta Krishi Kendra - Agricultural Products Management System
 
+### simplest and finest project by @LegendxTricks (Telegram)
 <div align="center">
 
 ![Agricultural Banner](https://img.shields.io/badge/Agriculture-Management-green?style=for-the-badge&logo=leaf&logoColor=white)
