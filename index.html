@@ -146,10 +146,14 @@
 
         const buyerNameElement = document.createElement('div');
         buyerNameElement.textContent = `Buyer: ${buyerName}`;
-        buyerNameElement.className = 'text-black mb-2';
+        buyerNameElement.className = 'text-black mb-4';
+
+        const productsHeaderElement = document.createElement('div');
+        productsHeaderElement.textContent = 'Products:';
+        productsHeaderElement.className = 'text-black font-bold mb-2';
 
         const cartDetailsClone = cartDetailsElement.cloneNode(true);
-        cartDetailsClone.className = 'text-black';
+        cartDetailsClone.className = 'text-black mb-4';
 
         const totalAmountElement = document.createElement('div');
         totalAmountElement.innerHTML = `<strong>${cartValueElement.textContent}</strong>`;
@@ -163,6 +167,7 @@
 
         cartBlockClone.appendChild(titleElement);
         cartBlockClone.appendChild(buyerNameElement);
+        cartBlockClone.appendChild(productsHeaderElement);
         cartBlockClone.appendChild(cartDetailsClone);
         cartBlockClone.appendChild(totalAmountElement);
         cartBlockClone.appendChild(dateTimeElement);
