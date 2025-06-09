@@ -70,13 +70,13 @@
 
       function addProductButton(name, price) {
         const productWrapper = document.createElement('div');
-        productWrapper.className = 'flex flex-col gap-1';
+        productWrapper.className = 'flex flex-col gap-1 h-20';
         
         const productButton = document.createElement('button');
-        productButton.className = 'product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-between border border-white bg-transparent';
+        productButton.className = 'product-button text-white font-semibold py-1 px-2 rounded-lg flex items-center justify-center border border-white bg-transparent text-xs leading-tight h-12 overflow-hidden';
         productButton.dataset.name = name;
         productButton.dataset.price = price;
-        productButton.innerHTML = `${name} - ₹${price}`;
+        productButton.innerHTML = `<span class="text-center">${name} - ₹${price}</span>`;
         productButton.addEventListener('click', function () {
           const quantity = prompt('Enter quantity:');
           if (quantity && !isNaN(quantity) && parseInt(quantity) > 0) {
@@ -102,7 +102,7 @@
           if (newPrice && !isNaN(newPrice) && parseFloat(newPrice) > 0) {
             const updatedPrice = parseFloat(newPrice);
             productButton.dataset.price = updatedPrice;
-            productButton.innerHTML = `${name} - ₹${updatedPrice}`;
+            productButton.innerHTML = `<span class="text-center">${name} - ₹${updatedPrice}</span>`;
             
             // Update cart if this item is already in cart
             if (cart[name]) {
