@@ -65,7 +65,7 @@ gkkweb/
 ## 🎯 Key Features Breakdown
 
 ### 1. 🏪 Product Management System
-\```javascript
+```javascript
 // Dynamic product loading from text files
 function loadProducts(category) {
     fetch(`${category}.txt`)
@@ -74,7 +74,7 @@ function loadProducts(category) {
             // Parse and display products
         });
 }
-\```
+```
 
 Features:
 - ✅ Four product categories (Seeds, Fertilizers, Herbicides, Pesticides)
@@ -83,7 +83,7 @@ Features:
 - ✅ Responsive 2-column grid design
 
 ### 2. 🔧 Real-time Price Editing
-\```javascript
+```javascript
 // Edit price functionality
 editButton.addEventListener('click', function (e) {
     const newPrice = prompt(`Enter new price for ${name}:`, price);
@@ -91,7 +91,7 @@ editButton.addEventListener('click', function (e) {
         // Update price for current session only
     }
 });
-\```
+```
 
 Benefits:
 - 🎯 Order-specific pricing: Change prices for individual orders
@@ -100,7 +100,7 @@ Benefits:
 - ⚡ Instant feedback: Real-time UI updates
 
 ### 3. 🛒 Smart Shopping Cart
-\```javascript
+```javascript
 // Cart management with real-time updates
 function updateCart() {
     let cartDetailsHTML = '';
@@ -109,7 +109,7 @@ function updateCart() {
         // Calculate and display cart items
     }
 }
-\```
+```
 
 Capabilities:
 - ➕ Add products with custom quantities
@@ -119,7 +119,7 @@ Capabilities:
 - 🔄 Dynamic price updates
 
 ### 4. 📄 Receipt Generation System
-\```javascript
+```javascript
 // Generate downloadable receipt
 html2canvas(cartBlockClone).then(canvas => {
     const imgData = canvas.toDataURL('image/png');
@@ -127,7 +127,7 @@ html2canvas(cartBlockClone).then(canvas => {
     link.download = 'cart-details.png';
     link.click();
 });
-\```
+```
 
 Receipt Features:
 - 🏢 Company header with branding
@@ -164,23 +164,23 @@ Receipt Features:
 
 ### Installation
 1. Clone the repository
-   \```bash
+   ```bash
    git clone https://github.com/ikaayuxd/gkkweb.git
    cd gkkweb
-   \```
+   ```
 
 2. Start local server (optional)
-   \```bash
+   ```bash
    python3 -m http.server 8000
    # or
    npx serve .
-   \```
+   ```
 
 3. Open in browser
-   \```
+   ```
    http://localhost:8000
    # or directly open index.html
-   \```
+   ```
 
 ---
 
@@ -203,14 +203,14 @@ Receipt Features:
 ## 🔧 Customization
 
 ### Adding New Products
-\```
+```
 # Format in .txt files
 🌱 Product Name, Price
 🌾 Another Product, Price
-\```
+```
 
 ### Styling Modifications
-\```css
+```css
 /* Custom gradient colors */
 background: linear-gradient(135deg, #1e3a8a, #3b82f6, #10b981, #f59e0b);
 
@@ -218,7 +218,7 @@ background: linear-gradient(135deg, #1e3a8a, #3b82f6, #10b981, #f59e0b);
 .product-button {
     /* Custom styles here */
 }
-\```
+```
 
 ---
 
