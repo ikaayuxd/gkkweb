@@ -1,4 +1,6 @@
-# 🌾 Gumasta Krishi Kendra - Agricultural Products Management System
+# 🌾 Gumasta Krishi Kendra 
+
+## Agricultural Products Management System
 
 ### simplest and finest project by @LegendxTricks (Telegram)
 <div align="center">
