@@ -1,4 +1,5 @@
-# 🌾 Gumasta Krishi Kendra - Agricultural Products Management System
+# 🌾 Gumasta Krishi Kendra
+## Agricultural Products Management System
 
 <div align="center">
 
